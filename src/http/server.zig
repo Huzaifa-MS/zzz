@@ -235,7 +235,7 @@ pub const Server = struct {
             provision.zc_recv_buffer = ZeroCopy(u8).init(rt.allocator, config.socket_buffer_bytes) catch {
                 @panic("attempting to allocate more memory than available. (ZeroCopyBuffer)");
             };
-            provision.header_buffer = std.ArrayList(u8).init(rt.allocator);
+            provision.header_buffer = try std.ArrayList(u8).initCapacity(rt.allocator, 0);
             provision.arena = std.heap.ArenaAllocator.init(rt.allocator);
             provision.captures = rt.allocator.alloc(Capture, config.capture_count_max) catch {
                 @panic("attempting to allocate more memory than available. (Captures)");
@@ -505,7 +505,7 @@ pub const Server = struct {
             ) catch {
                 @panic("attempting to allocate more memory than available. (ZeroCopy)");
             };
-            provision.header_buffer = std.ArrayList(u8).init(rt.allocator);
+            provision.header_buffer = try std.ArrayList(u8).initCapacity(rt.allocator, 0);
             provision.arena = std.heap.ArenaAllocator.init(rt.allocator);
             provision.captures = rt.allocator.alloc(Capture, self.config.capture_count_max) catch {
                 @panic("attempting to allocate more memory than available. (Captures)");
